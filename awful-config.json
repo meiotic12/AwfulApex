@@ -1,6 +1,7 @@
 {
     "load": [
         "apex.lua",
+        "utility.lua",
 
         "warrior/protectionList.lua",
         "warrior/protection.lua"
