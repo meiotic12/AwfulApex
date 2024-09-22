@@ -2,7 +2,7 @@
     "load": [
         "apex.lua",
         "utility.lua",
-         "drawings.lua",
+        //  "drawings.lua",
 
         "warrior/protectionList.lua",
         "warrior/protection.lua",
