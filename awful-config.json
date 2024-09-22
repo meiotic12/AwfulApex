@@ -1,0 +1,8 @@
+{
+    "load": [
+        "apex.lua",
+
+        "warrior/protectionList.lua",
+        "warrior/protection.lua"
+    ]
+}
