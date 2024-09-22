@@ -41,7 +41,7 @@ protection.stormBolt:Callback("stormbolt_pve", function(spell, unit)
 
     for _, value in ipairs(protection.pve_Stuns) do
         if unit.casting == value then
-            if (unit.castRemains <= 0.5 or unit.castRemains <= player.gcd) then
+            if (unit.castRemains <= 0.5 or unit.castRemains <= player.gcdRemains) then
                 return spell:Cast(unit)
             end
         end

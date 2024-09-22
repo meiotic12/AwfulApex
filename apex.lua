@@ -17,4 +17,5 @@ apex.warrior.gui = {}
 apex.warrior.settings = {}
 apex.warrior.cmd = {}
 
+apex.warrior.fury = awful.Actor:New({ spec = 2 , class = "warrior" })
 apex.warrior.protection = awful.Actor:New({ spec = 3 , class = "warrior" })
