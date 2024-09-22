@@ -48,55 +48,101 @@ protection.stormBolt:Callback("stormbolt_pve", function(spell, unit)
     end
 end)
 
-protection.pummel:Callback("pummel_pve", function(spell, unit)
-    local castingSpell = unit.casting
+protection.pummel:Callback("pummel_optimal", function(spell, unit)
+    if unit.castRemains > .5 then return end
+    if unit.distance > spell.range then return end
 
-    local isInKicks = false
-    local isInSpellReflect = false
+    local canBeKicked = false
 
     for _, spellName in ipairs(protection.pve_Kicks) do
-        if castingSpell == spellName then
-            isInKicks = true
+        if unit.casting == spellName then
+            canBeKicked = true
             break
         end
     end
 
-    for _, spellName in ipairs(protection.pve_SpellReflect) do
-        if castingSpell == spellName then
-            isInSpellReflect = true
-            break
-        end
-    end
-
-    if isInKicks 
-        and not player.buff(23920)
-        and (not isInSpellReflect or spellReflection.cd > 0)
-        and unit.castRemains <= .5 then
+    if canBeKicked then
         return spell:Cast(unit)
     end
 end)
 
-protection.spellReflection:Callback("spellReflection_pve", function(spell, unit)
-    local castingSpell = unit.casting
-    if not castingSpell then return end
+protection.spellReflection:Callback("spellReflection_optimal", function(spell, unit)
+    if unit.casting 
+    and unit.castTarget.isUnit(player) 
+    and unit.castRemains <= 0.5 then
 
-    if not unit.castTarget.isUnit(player) then return end
+        local canBeKicked = false
 
-    for _, spellName in ipairs(protection.pve_SpellReflect) do
-        if castingSpell == spellName
-        and unit.castRemains <= .5 then
+        if pummel.cd == 0 and pummel.range < unit.distance then
+            for _, spellName in ipairs(protection.pve_Kicks) do
+                if unit.casting == spellName then
+                    canBeKicked = true
+                    break
+                end
+            end
+
+        end
+
+        local canBeReflected = false
+
+        if not canBeKicked then
+            for _, spellName in ipairs(protection.pve_SpellReflect) do
+                if unit.casting == spellName then
+                    canBeReflected = true
+                    break
+                end
+            end
+        end
+
+        if not canBeKicked and canBeReflected then
             return spell:Cast()
         end
     end
 end)
 
-protection.spellBlock:Callback("spellBlock_pve", function(spell, unit)
-    local castingSpell = unit.casting
-    if not castingSpell then return end
+protection.spellBlock:Callback("spellBlock_optimal", function(spell, unit)
+    if unit.casting 
+    and unit.castRemains <= 0.5 then
 
-    for _, spellName in ipairs(protection.pve_SpellBlock) do
-        if castingSpell == spellName
-        and unit.castRemains <= .5 then
+        local canBeKicked = false
+
+        if pummel.cd == 0 and pummel.range < unit.distance then
+            for _, spellName in ipairs(protection.pve_Kicks) do
+                if unit.casting == spellName then
+                    canBeKicked = true
+                    break
+                end
+            end
+        end
+
+        local canBeReflected = false
+
+        if not canBeKicked
+        and (player.buff(23920) or spellReflection.cd == 0)
+        and unit.castTarget.isUnit(player)  then
+            for _, spellName in ipairs(protection.pve_SpellReflect) do
+                if unit.casting == spellName then
+                    canBeReflected = true
+                    break
+                end
+            end
+        end
+
+        local canBeBlocked = false
+
+        if not canBeKicked
+        and not canBeReflected then
+            for _, spellName in ipairs(protection.pve_SpellBlock) do
+                if unit.casting == spellName then
+                    canBeBlocked = true
+                    break
+                end
+            end
+        end
+
+        if not isInKickList 
+        and not canBeReflected 
+        and canBeBlocked then
             return spell:Cast()
         end
     end
@@ -186,13 +232,14 @@ end)
 
 protection.championsSpear:Callback("championsSpear", function(spell, unit)
     if not (IsShiftKeyDown() or IsAltKeyDown()) then return end
+    if not player.hasTalent("champion's spear") then return end
 
     return spell:AoECast(unit)
 end)
 
 protection.thunderousRoar:Callback("thunderousRoar", function(spell, unit)
     if not (IsShiftKeyDown() or IsAltKeyDown()) then return end
-
+    if not player.hasTalent("thunderous roar") then return end
     return spell:Cast()
 end)
 
@@ -408,18 +455,19 @@ protection:Init(function()
 
     protection.castingEnemies = awful.enemies.filter(function(unit) return unit.casting and unit.los end)
 
+    if IsKeyDown("E") or IsKeyDown("Q") or IsKeyDown("8") then return end
+
     if player.combat then
         if focus.exists then
-            protection.pummel("pummel_pve", focus)
+            protection.pummel("pummel_optimial", focus)
         end
 
         protection.castingEnemies.loop(function(unit)
-            protection.stormBolt("stormBolt_pve", unit)
-            protection.spellReflection("spellReflection_pve", unit)
+            protection.spellReflection("spellReflection_optimal", unit)
             if not focus.exists then
-                protection.pummel("pummel_pve", unit)
+                protection.pummel("pummel_optimial", unit)
             end
-            protection.spellBlock("spellBlock_pve", unit)
+            protection.spellBlock("spellBlock_optimal", unit)
         end)
     end
 

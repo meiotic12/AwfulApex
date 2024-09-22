@@ -80,7 +80,7 @@ end)
 
 thunderousRoar:Callback("thunderousRoar_slayer_st_3", function(spell, unit)
     if not IsShiftKeyDown() then return end
-
+    if not player.hasTalent("thunderous roar") then return end
     if player.buff("enrage") then
         return spell:Cast()
     end
@@ -88,7 +88,7 @@ end)
 
 championsSpear:Callback("championsSpear_slayer_st_4", function(spell, unit)
     if not IsShiftKeyDown() then return end
-
+    if not player.hasTalent("champion's spear") then return end
     if player.buff("enrage") and (player.hasTalent("titan's torment") and avatar.cd < player.gcdRemains or not player.hasTalent("titan's torment")) then
         return spell:AoECast(unit)
     end
@@ -231,7 +231,7 @@ end)
 
 thunderousRoar:Callback("thunderousRoar_slayer_mt_3", function(spell, unit)
     if not IsShiftKeyDown() then return end
-
+    if not player.hasTalent("thunderous roar") then return end
     if player.buff("enrage") then
         return spell:Cast()
     end
@@ -239,6 +239,7 @@ end)
 
 championsSpear:Callback("championsSpear_slayer_mt_4", function(spell, unit)
     if not IsShiftKeyDown() then return end
+    if not player.hasTalent("champion's spear") then return end
 
     if player.buff("enrage") and (player.hasTalent("titan's torment") and avatar.cd < player.gcdRemains or not player.hasTalent("titan's torment")) then
         return spell:AoECast(unit)
@@ -356,6 +357,8 @@ end)
 fury:Init(function()
     if player.mounted then return end
     if player.dead then return end
+
+    if IsKeyDown("E") or IsKeyDown("Q") or IsKeyDown("8") then return end
 
     enemiesAround = awful.enemies.around(player, 8)
 
