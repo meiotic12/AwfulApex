@@ -51,7 +51,6 @@ end)
 
 -- End Utility --
 
-
 -- Test --
 
 recklessness:Callback("recklessness_slayer_st_1", function(spell, unit)
