@@ -440,4 +440,4 @@ fury:Init(function()
             whirlwind("whirlwind_slayer_mt_23", target)
         end
     end
-end, .05)
+end, .2)

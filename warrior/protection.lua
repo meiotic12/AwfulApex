@@ -540,4 +540,4 @@ protection:Init(function()
         protection.thunderClap("thunderclap_generic3", target)
     end
 
-end, .05)
+end, .2)
