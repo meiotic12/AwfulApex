@@ -459,13 +459,13 @@ protection:Init(function()
 
     if player.combat then
         if focus.exists then
-            protection.pummel("pummel_optimial", focus)
+            protection.pummel("pummel_optimal", focus)
         end
 
         protection.castingEnemies.loop(function(unit)
             protection.spellReflection("spellReflection_optimal", unit)
             if not focus.exists then
-                protection.pummel("pummel_optimial", unit)
+                protection.pummel("pummel_optimal", unit)
             end
             protection.spellBlock("spellBlock_optimal", unit)
         end)
