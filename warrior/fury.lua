@@ -90,7 +90,20 @@ championsSpear:Callback("championsSpear_slayer_st_4", function(spell, unit)
     if not IsShiftKeyDown() then return end
     if not player.hasTalent("champion's spear") then return end
     if player.buff("enrage") and (player.hasTalent("titan's torment") and avatar.cd < player.gcdRemains or not player.hasTalent("titan's torment")) then
-        return spell:AoECast(unit)
+        local x,y,z = ObjectRawPosition(unit.pointer)
+
+        local wasLooking = IsMouselooking()
+    
+        if wasLooking then
+            MouselookStop()
+        end
+    
+        CastSpellByName(spell.name, {x, y, z})
+        Click(x, y, z)
+    
+        if wasLooking then
+            MouselookStart()
+        end
     end
 end)
 

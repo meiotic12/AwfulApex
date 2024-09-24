@@ -219,7 +219,20 @@ end)
 protection.ravager:Callback("ravager", function(spell, unit)
     if not (IsShiftKeyDown() or IsAltKeyDown()) then return end
 
-    return spell:AoECast(unit)
+    local x,y,z = ObjectRawPosition(unit.pointer)
+
+    local wasLooking = IsMouselooking()
+
+    if wasLooking then
+        MouselookStop()
+    end
+
+    CastSpellByName(spell.name, {x, y, z})
+    Click(x, y, z)
+
+    if wasLooking then
+        MouselookStart()
+    end
 end)
 
 protection.demoralizingShout:Callback("demoralizingShout", function(spell, unit)
@@ -234,7 +247,20 @@ protection.championsSpear:Callback("championsSpear", function(spell, unit)
     if not (IsShiftKeyDown() or IsAltKeyDown()) then return end
     if not player.hasTalent("champion's spear") then return end
 
-    return spell:AoECast(unit)
+    local x,y,z = ObjectRawPosition(unit.pointer)
+
+    local wasLooking = IsMouselooking()
+
+    if wasLooking then
+        MouselookStop()
+    end
+
+    CastSpellByName(spell.name, {x, y, z})
+    Click(x, y, z)
+
+    if wasLooking then
+        MouselookStart()
+    end
 end)
 
 protection.thunderousRoar:Callback("thunderousRoar", function(spell, unit)
@@ -473,7 +499,7 @@ protection:Init(function()
 
     if protection.enemiesAround > 0 then
  
-        if not awful.target then return end
+        if not awful.target.exists then return end
 
         protection.warriorautoAttack("warriorautoAttack")
 
