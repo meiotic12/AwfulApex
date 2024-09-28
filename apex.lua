@@ -19,3 +19,7 @@ apex.warrior.cmd = {}
 
 apex.warrior.fury = awful.Actor:New({ spec = 2 , class = "warrior" })
 apex.warrior.protection = awful.Actor:New({ spec = 3 , class = "warrior" })
+
+apex.warlock = {}
+
+apex.warlock.affliction = awful.Actor:New({ spec = 1 , class = "warlock" })

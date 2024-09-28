@@ -2,9 +2,12 @@
     "load": [
         "apex.lua",
         "utility.lua",
+        "smartPause.lua",
 
         "warrior/protectionList.lua",
         "warrior/protection.lua",
-        "warrior/fury.lua"
+        "warrior/fury.lua",
+
+        "warlock/affliction.lua"
     ]
 }
